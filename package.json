@@ -4,7 +4,7 @@
   "description": "Backend calendar booking service with conflict prevention",
   "main": "src/server.js",
   "scripts": {
-  "start": "node index.js",
+  "start": "node src/server.js",
   "dev": "nodemon index.js"
 }
 ,
