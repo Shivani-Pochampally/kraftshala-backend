@@ -1,10 +1,23 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+const { Sequelize } = require("sequelize");
 
-const User = require("./user.model")(sequelize, DataTypes);
-const Meeting = require("./meeting.model")(sequelize, DataTypes);
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  protocol: "postgres",
+  logging: false,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
+});
 
-User.hasMany(Meeting, { foreignKey: "userId" });
-Meeting.belongsTo(User, { foreignKey: "userId" });
+const db = {};
 
-module.exports = { sequelize, User, Meeting };
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+// Import models
+db.User = require("./user.model")(sequelize, Sequelize);
+
+module.exports = db;

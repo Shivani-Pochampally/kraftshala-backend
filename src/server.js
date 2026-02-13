@@ -1,22 +1,19 @@
-require("dotenv").config();  
+const express = require("express");
+const app = express();
 
-const app = require('./app');
-const { sequelize } = require('./models');
+const db = require("./models");
 
-const PORT = process.env.PORT || 3000;
+app.use(express.json());
 
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("DB connected");
+// connect DB
+db.sequelize.sync()
+  .then(() => {
+    console.log("Database synced");
+  })
+  .catch(err => console.log(err));
 
-    await sequelize.sync();
-    console.log("Models synced");
+const PORT = process.env.PORT || 5000;
 
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (err) {
-    console.error("DB connection failed:", err);
-  }
-})();
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
